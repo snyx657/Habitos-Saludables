@@ -1,0 +1,384 @@
+Genial — aquí tienes un archivo HTML completo (incluye CSS y JavaScript) listo para copiar y pegar. Respeta tu wireframe: encabezado con logo y buscador, navegación, hero, sección de hábitos destacados (tarjetas), artículos recientes, formulario sencillo y pie de página. Contiene 3 interacciones: navegación entre secciones (smooth scroll), botones con acciones (abrir hero / abrir modal de registro), y un formulario simple que valida y muestra un mensaje.
+
+Copia todo y guárdalo como index.html, ábrelo en tu navegador.
+
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Hábitos Saludables — Prototipo</title>
+  <meta name="description" content="Prototipo web basado en wireframe: Hábitos Saludables.">
+  <style>
+    /* RESET BÁSICO */
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;}
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;height:auto;display:block}
+
+    /* CONTENEDOR */
+    .container{max-width:1100px;margin:0 auto;padding:20px}
+
+    /* ENCABEZADO */
+    header.site-header{
+      border-bottom:4px solid #e6f4ea;
+      background:#fff;
+      position:sticky;top:0;z-index:40;
+    }
+    .header-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 20px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{
+      font-weight:700;color:#2b7a3a;font-size:20px;
+      letter-spacing:0.6px;
+    }
+    .search {
+      display:flex;align-items:center;gap:8px;
+    }
+    .search input{
+      padding:8px 10px;border-radius:6px;border:1px solid #ddd;min-width:180px;
+    }
+    .menu-toggle{display:none;border:0;background:transparent;font-size:20px}
+
+    /* NAVEGACIÓN */
+    nav.main-nav{background:#f6fbf7}
+    .nav-inner{display:flex;gap:18px;overflow:auto;padding:10px 20px}
+    .nav-inner a{padding:8px 12px;border-radius:6px;white-space:nowrap;color:#225322;font-weight:600}
+    .nav-inner a:hover{background:#e6f4ea}
+
+    /* HERO */
+    .hero{
+      border:1px dashed #e6ece6;border-radius:8px;padding:28px;margin:20px 0;display:flex;flex-direction:column;gap:18px;align-items:center;text-align:center;background:linear-gradient(180deg, #ffffff 0%, #fbfffb 100%);
+    }
+    .hero h1{font-size:28px;color:#194d25}
+    .hero p{font-size:18px;color:#3a5b3a}
+    .hero .cta{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+    .btn{
+      padding:10px 16px;border-radius:8px;border:0;background:#2b7a3a;color:#fff;font-weight:700;cursor:pointer;
+      transition:transform .15s ease, box-shadow .15s;
+    }
+    .btn.secondary{background:#fff;border:1px solid #2b7a3a;color:#2b7a3a}
+    .btn:hover{transform:translateY(-3px);box-shadow:0 6px 18px rgba(43,122,58,0.12)}
+    .btn.secondary:hover{background:#f0fff4}
+
+    /* HABITOS DESTACADOS */
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:20px 0}
+    .card{
+      padding:16px;border-radius:10px;border:1px solid #eee;background:#fff;min-height:140px;
+      display:flex;flex-direction:column;gap:10px;transition:transform .18s ease, box-shadow .18s;
+    }
+    .card:hover{transform:translateY(-6px);box-shadow:0 10px 26px rgba(30,60,30,0.06)}
+    .card h3{color:#225322}
+    .card p{color:#556b56;font-size:14px}
+
+    /* ARTÍCULOS */
+    .articles{display:grid;gap:14px;margin:20px 0}
+    .article{border:1px dashed #e6e6e6;padding:14px;border-radius:8px;background:#fff}
+    .article h4{color:#163f22;margin-bottom:6px}
+    .article p{color:#445b44;font-size:14px;margin-bottom:10px}
+    .article a{font-weight:700;color:#2b7a3a}
+
+    /* FORMULARIO (modal sencillo) */
+    .modal-backdrop{
+      position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:center;justify-content:center;padding:20px;z-index:100;
+    }
+    .modal{
+      background:#fff;padding:18px;border-radius:10px;max-width:520px;width:100%;box-shadow:0 18px 40px rgba(0,0,0,0.18)
+    }
+    .modal h3{margin-bottom:10px}
+    .form-row{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+    .form-row input,.form-row textarea{
+      padding:10px;border-radius:8px;border:1px solid #ddd;font-size:15px;width:100%;
+    }
+    .close-btn{background:transparent;border:0;font-weight:700;cursor:pointer;color:#666}
+
+    /* FOOTER */
+    footer{border-top:3px solid #e6f4ea;padding:18px 0;margin-top:26px;background:#fff}
+    .footer-inner{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .socials a{margin-right:10px;color:#2b7a3a;font-weight:600}
+
+    /* RESPONSIVE */
+    @media (max-width:900px){
+      .cards{grid-template-columns:repeat(2,1fr)}
+    }
+    @media (max-width:640px){
+      .header-inner{padding:10px}
+      .nav-inner{display:none}
+      .menu-toggle{display:block}
+      .cards{grid-template-columns:1fr}
+      .hero h1{font-size:22px}
+      .hero p{font-size:15px}
+    }
+
+    /* Smooth scroll behavior */
+    html{scroll-behavior:smooth}
+  </style>
+</head>
+<body>
+
+  <header class="site-header" role="banner">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">Hábitos Saludables</div>
+        <div style="font-size:12px;color:#7a7a7a">Prototipo</div>
+      </div>
+
+      <div class="search" role="search" aria-label="Buscar en Hábitos Saludables">
+        <input id="searchInput" type="search" placeholder="Buscar..." aria-label="Buscar"/>
+        <button class="btn secondary" id="searchBtn" aria-label="Buscar botón">Buscar</button>
+      </div>
+
+      <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="mainNav">☰</button>
+    </div>
+
+    <nav class="main-nav" id="mainNav" aria-label="Menú principal">
+      <div class="container nav-inner" role="navigation">
+        <a href="#inicio">Inicio</a>
+        <a href="#alimentacion">Alimentación</a>
+        <a href="#ejercicio">Ejercicio</a>
+        <a href="#salud-mental">Salud Mental</a>
+        <a href="#hidratacion">Hidratación</a>
+        <a href="#prevencion">Prevención</a>
+        <a href="#contacto">Contacto</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container" id="inicio" role="main">
+    <!-- HERO / PORTADA -->
+    <section class="hero" aria-labelledby="heroTitle">
+      <h1 id="heroTitle">Pequeños cambios, grandes resultados</h1>
+      <p>Comienza hoy: hábitos simples que mejoran tu salud física y mental.</p>
+      <div class="cta">
+        <button class="btn" id="startBtn">Empezar</button>
+        <button class="btn secondary" id="openRegister">Registrarme</button>
+        <button class="btn secondary" id="learnMore" onclick="document.getElementById('habitos').scrollIntoView({behavior:'smooth'})">Ver hábitos</button>
+      </div>
+    </section>
+
+    <!-- SECCIÓN: HÁBITOS DESTACADOS -->
+    <section id="habitos" aria-labelledby="habitosTitle">
+      <h2 id="habitosTitle" style="color:#194d25;margin-bottom:10px">Hábitos destacados</h2>
+      <div class="cards" role="list">
+        <article class="card" role="listitem" id="alimentacion">
+          <h3>Alimentación</h3>
+          <p>Consejos y recetas rápidas para comer bien sin complicaciones.</p>
+          <p style="margin-top:auto"><a href="#art1" aria-label="Leer más sobre alimentación">Leer más →</a></p>
+        </article>
+
+        <article class="card" role="listitem" id="ejercicio">
+          <h3>Ejercicio</h3>
+          <p>Rutinas cortas y efectivas para todos los niveles.</p>
+          <p style="margin-top:auto"><a href="#art2">Leer más →</a></p>
+        </article>
+
+        <article class="card" role="listitem" id="salud-mental">
+          <h3>Salud Mental</h3>
+          <p>Técnicas de relajación y mindfulness para reducir el estrés.</p>
+          <p style="margin-top:auto"><a href="#art3">Leer más →</a></p>
+        </article>
+      </div>
+    </section>
+
+    <!-- SECCIÓN: ARTÍCULOS RECIENTES -->
+    <section id="articulos" aria-labelledby="articulosTitle">
+      <h2 id="articulosTitle" style="color:#194d25;margin-bottom:10px">Artículos recientes</h2>
+      <div class="articles">
+        <article class="article" id="art1">
+          <h4>5 desayunos rápidos y saludables</h4>
+          <p>Ideas fáciles para desayunar nutritivo incluso cuando tienes prisa.</p>
+          <a href="#" onclick="alert('Cargando artículo: 5 desayunos rápidos y saludables')">Leer más</a>
+        </article>
+
+        <article class="article" id="art2">
+          <h4>Cómo empezar a hacer ejercicio si eres principiante</h4>
+          <p>Guía práctica para dar los primeros pasos sin lesiones.</p>
+          <a href="#" onclick="alert('Cargando artículo: Cómo empezar a hacer ejercicio')">Leer más</a>
+        </article>
+
+        <article class="article" id="art3">
+          <h4>Mindfulness para principiantes</h4>
+          <p>Ejercicios breves para reducir la ansiedad y mejorar la concentración.</p>
+          <a href="#" onclick="alert('Cargando artículo: Mindfulness para principiantes')">Leer más</a>
+        </article>
+      </div>
+    </section>
+
+    <!-- SECCIÓN: CONTACTO / FORMULARIO -->
+    <section id="contacto" aria-labelledby="contactoTitle" style="margin-top:18px">
+      <h2 id="contactoTitle" style="color:#194d25;margin-bottom:10px">Contacto</h2>
+      <p style="margin-bottom:12px">¿Tienes dudas o quieres recibir novedades? Escríbenos.</p>
+
+      <form id="contactForm" class="article" style="max-width:640px;">
+        <div class="form-row">
+          <label for="name">Nombre</label>
+          <input id="name" name="name" type="text" placeholder="Tu nombre" required>
+        </div>
+        <div class="form-row">
+          <label for="email">Correo</label>
+          <input id="email" name="email" type="email" placeholder="email@ejemplo.com" required>
+        </div>
+        <div class="form-row">
+          <label for="message">Mensaje</label>
+          <textarea id="message" name="message" rows="4" placeholder="Escribe tu mensaje..." required></textarea>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center">
+          <button type="submit" class="btn">Enviar</button>
+          <button type="reset" class="btn secondary">Limpiar</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <!-- MODAL (registro rápido) -->
+  <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal" role="document" aria-labelledby="modalTitle">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <h3 id="modalTitle">Regístrate</h3>
+        <button class="close-btn" id="closeModal" aria-label="Cerrar">✕</button>
+      </div>
+
+      <form id="registerForm">
+        <div class="form-row">
+          <label for="rname">Nombre</label>
+          <input id="rname" name="rname" type="text" required>
+        </div>
+        <div class="form-row">
+          <label for="remail">Correo</label>
+          <input id="remail" name="remail" type="email" required>
+        </div>
+        <div style="display:flex;gap:8px;justify-content:flex-end">
+          <button type="button" class="btn secondary" id="cancelRegister">Cancelar</button>
+          <button type="submit" class="btn">Crear cuenta</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container footer-inner">
+      <div>© 2025 Hábitos Saludables</div>
+      <div class="socials" aria-label="Redes sociales">
+        <a href="#" aria-label="Facebook">Facebook</a>
+        <a href="#" aria-label="Instagram">Instagram</a>
+        <a href="#" aria-label="Twitter">Twitter</a>
+      </div>
+      <div><a href="#">Aviso de Privacidad</a></div>
+    </div>
+  </footer>
+
+  <script>
+    // INTERACTIONS: menú móvil, modal, búsqueda simulada, envío de formulario simple
+    (function(){
+      const menuToggle = document.getElementById('menuToggle');
+      const mainNav = document.getElementById('mainNav');
+      const navInner = mainNav.querySelector('.nav-inner');
+      const modalBackdrop = document.getElementById('modalBackdrop');
+      const openRegister = document.getElementById('openRegister');
+      const closeModal = document.getElementById('closeModal');
+      const cancelRegister = document.getElementById('cancelRegister');
+      const registerForm = document.getElementById('registerForm');
+      const searchBtn = document.getElementById('searchBtn');
+      const searchInput = document.getElementById('searchInput');
+
+      // menu toggle (mobile)
+      menuToggle.addEventListener('click', function(){
+        const expanded = this.getAttribute('aria-expanded') === 'true';
+        this.setAttribute('aria-expanded', String(!expanded));
+        // toggle nav visibility
+        if (navInner.style.display === 'flex' || navInner.style.display === '') {
+          navInner.style.display = (navInner.style.display === 'flex') ? 'none' : 'flex';
+        } else {
+          navInner.style.display = 'flex';
+        }
+      });
+
+      // abrir modal registro
+      openRegister.addEventListener('click', function(){ showModal(); });
+
+      // cerrar modal
+      closeModal.addEventListener('click', hideModal);
+      cancelRegister.addEventListener('click', hideModal);
+      modalBackdrop.addEventListener('click', function(e){
+        if (e.target === modalBackdrop) hideModal();
+      });
+
+      function showModal(){
+        modalBackdrop.style.display = 'flex';
+        modalBackdrop.setAttribute('aria-hidden','false');
+        // focus primer input
+        setTimeout(()=>document.getElementById('rname').focus(),80);
+      }
+      function hideModal(){
+        modalBackdrop.style.display = 'none';
+        modalBackdrop.setAttribute('aria-hidden','true');
+      }
+
+      // manejar formulario de registro (simulado)
+      registerForm.addEventListener('submit', function(e){
+        e.preventDefault();
+        const name = document.getElementById('rname').value.trim();
+        const email = document.getElementById('remail').value.trim();
+        if (!name || !email) {
+          alert('Por favor completa los campos requeridos.');
+          return;
+        }
+        hideModal();
+        alert('¡Cuenta creada! Revisa tu correo (simulado). Bienvenido, ' + name + ' 🙂');
+        registerForm.reset();
+      });
+
+      // búsqueda simulada (ejemplo de botón con acción)
+      searchBtn.addEventListener('click', function(){
+        const q = searchInput.value.trim();
+        if(!q) {
+          alert('Escribe algo para buscar.');
+          return;
+        }
+        // En prototipo solo mostramos mensaje
+        alert('Buscando: ' + q + ' (resultado simulado)');
+      });
+
+      // formulario de contacto (validación mínima)
+      const contactForm = document.getElementById('contactForm');
+      contactForm.addEventListener('submit', function(e){
+        e.preventDefault();
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const msg = document.getElementById('message').value.trim();
+        if(!name || !email || !msg){
+          alert('Por favor completa todos los campos.');
+          return;
+        }
+        // Simulamos envío
+        alert('Gracias ' + name + '. Tu mensaje ha sido recibido (simulado).');
+        contactForm.reset();
+        // opcional: llevar a top
+        window.scrollTo({top:0,behavior:'smooth'});
+      });
+
+      // Start button lleva a sección de hábitos
+      document.getElementById('startBtn').addEventListener('click', function(){
+        document.getElementById('habitos').scrollIntoView({behavior:'smooth'});
+      });
+
+      // Alternativa: cerrar nav si se hace click en un enlace (útil en móvil)
+      navInner.querySelectorAll('a').forEach(a=>{
+        a.addEventListener('click', ()=> {
+          if (window.innerWidth <= 640) {
+            navInner.style.display = 'none';
+            menuToggle.setAttribute('aria-expanded','false');
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
+
+¿Quieres que:
+
+lo convierta a archivo .zip con imágenes de ejemplo?
+
+genere una versión con estilos (colores) diferentes?
+
+te explique cómo subirlo a GitHub Pages para verlo en línea?
